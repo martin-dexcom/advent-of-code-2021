@@ -35,7 +35,7 @@ class Vector2 {
 }
 
 Future<String> readFromFile(String name) async {
-  File file = new File('input.txt');
+  File file = new File(name);
   Future<String> futureContent = file.readAsString();
   return futureContent;
 }
