@@ -5,14 +5,20 @@ import 'dart:convert';
 class Vector2 {
   int x = 0;
   int y = 0;
+  int depth = 0;
 
   Vector2(int x, int y) {
     this.x = x;
     this.y = y;
   }
 
-  Vector2 sum(Vector2 vector) {
-    return Vector2(this.x + vector.x, this.y + vector.y);
+  void sum(Vector2 vector) {
+    // Increases horizontal position
+    this.x += vector.x;
+    // Increases vertical position
+    this.y += vector.y;
+    // Sum to depth
+    this.depth += this.y * vector.x;
   }
 
   String toString() {
@@ -21,6 +27,10 @@ class Vector2 {
 
   int magnitude() {
     return x * y;
+  }
+
+  int calculatedDepth() {
+    return this.depth * this.x;
   }
 }
 
@@ -52,15 +62,22 @@ Future<List<Vector2>> convertToVectors(List<String> elements) async {
 Future<Vector2> sumVectors(List<Vector2> vectors) async {
   Vector2 vector = new Vector2(0,0);
   for (var localVector in vectors) {
-    vector = vector.sum(localVector);
+    vector.sum(localVector);
   }
   return vector;
 }
 
 void main() async {
+  // Get contents from  file
 	String contents = await readFromFile("input.txt");
+  // Convert them into usable chunks
   List<String> separatedContents = contents.split('\n');
+  // Convert them into Vector2 instances
   List<Vector2> vectors = await convertToVectors(separatedContents);
+  // Sum them all together (should be a reduce)
   Vector2 vector = await sumVectors(vectors);
-  print('Depth is: ${vector.magnitude()}');
+  // Output results
+  print('Magnitude is: ${vector.magnitude()}');
+  print('Aim is: ${vector.y}');
+  print('Depth is: ${vector.calculatedDepth()}');
 }
